@@ -20,6 +20,7 @@ import { mockUpload } from "./mock-api.js";
 let running = false;
 let retryTimer = null;
 let handlers = {
+  canSync: () => true,
   onChange: async () => {},
   onProgress: () => {},
   onStatus: () => {},
@@ -76,6 +77,10 @@ export async function syncQueue({ manual = false } = {}) {
   }
   if (!navigator.onLine) {
     handlers.onStatus("Offline. As fotos continuam salvas e serão enviadas quando houver conexão.");
+    return { sent: 0, failed: 0, remaining: 0 };
+  }
+  if (!handlers.canSync()) {
+    handlers.onStatus("Entre com uma conta de demonstração para enviar as fotos.");
     return { sent: 0, failed: 0, remaining: 0 };
   }
 
@@ -164,6 +169,9 @@ export async function syncQueue({ manual = false } = {}) {
         formData.append("photo", photo.blob, `captura-${photo.id}.jpg`);
         formData.append("batchId", photo.batchId);
         formData.append("capturedAt", new Date(photo.timestamp).toISOString());
+        for (const [key, value] of Object.entries(photo.captureMetadata ?? {})) {
+          if (value !== null && value !== undefined) formData.append(key, String(value));
+        }
         response = API_URL.startsWith("mock:")
           ? await mockUpload(formData)
           : await fetch(API_URL, {

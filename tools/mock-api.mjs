@@ -145,6 +145,17 @@ const server = createServer(async (request, response) => {
       sizeBytes: photo.sizeBytes,
       batchId: fields.get("batchId") ?? null,
       capturedAt: fields.get("capturedAt") ?? null,
+      employeeId: fields.get("employeeId") ?? null,
+      employeeName: fields.get("employeeName") ?? null,
+      condominiumId: fields.get("condominiumId") ?? null,
+      condominiumName: fields.get("condominiumName") ?? null,
+      latitude: fields.get("latitude") ?? null,
+      longitude: fields.get("longitude") ?? null,
+      accuracyMeters: fields.get("accuracyMeters") ?? null,
+      distanceMeters: fields.get("distanceMeters") ?? null,
+      locationValidatedAt: fields.get("locationValidatedAt") ?? null,
+      locationSource: fields.get("locationSource") ?? null,
+      locationIsMock: fields.get("locationIsMock") ?? null,
       receivedAt: new Date().toISOString(),
     };
     console.log(JSON.stringify({ received: metadata }));

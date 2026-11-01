@@ -19,42 +19,110 @@
         <span id="network-status" class="network-status" role="status">Verificando conexão…</span>
       </header>
 
-      <section class="camera-panel" aria-label="Captura de fotos">
-        <video id="camera-video" autoplay playsinline muted aria-label="Pré-visualização da câmera"></video>
-        <div id="camera-message" class="camera-message" role="status">
-          Preparando câmera…
-        </div>
-        <canvas id="capture-canvas" hidden></canvas>
+      <p class="demo-banner">
+        Demonstração: login e validação de local são simulados e não protegem dados reais.
+      </p>
+
+      <section id="login-section" class="workflow-card" aria-labelledby="login-title">
+        <h2 id="login-title">Identificação do funcionário</h2>
+        <p>Entre com uma conta de demonstração para continuar.</p>
+        <form id="login-form" class="form-stack">
+          <label for="employee-email">E-mail</label>
+          <input id="employee-email" name="email" type="email" autocomplete="username" required>
+          <label for="employee-password">Senha</label>
+          <input id="employee-password" name="password" type="password" autocomplete="current-password" required>
+          <button id="login-button" class="button button-primary" type="submit">Entrar</button>
+        </form>
+        <p class="demo-hint">
+          Exemplo: ana@demo.scanentrega / 1234
+        </p>
       </section>
 
-      <section class="controls" aria-label="Ações">
-        <button id="capture-button" class="button button-primary" type="button" disabled>
-          Tirar Foto
-        </button>
-        <button id="send-button" class="button button-secondary" type="button" disabled>
-          Enviar (0)
-        </button>
-        <button id="clear-button" class="button button-quiet" type="button" disabled>
-          Limpar lote
-        </button>
-        <button id="update-button" class="button button-update" type="button" hidden>
-          Atualizar aplicativo
-        </button>
+      <section id="workflow-section" class="workflow-card workflow-stack" hidden>
+        <div class="section-heading">
+          <div>
+            <h2>Olá, <span id="employee-name"></span></h2>
+            <p class="demo-hint">Conta de demonstração</p>
+          </div>
+          <button id="logout-button" class="button button-quiet" type="button">Sair</button>
+        </div>
+
+        <div class="form-stack">
+          <label for="condominium-select">Condomínio autorizado</label>
+          <select id="condominium-select"></select>
+          <p id="condominium-detail" class="field-help"></p>
+
+          <label for="location-mode">Validação de localização</label>
+          <select id="location-mode">
+            <option value="gps">GPS do aparelho</option>
+            <option value="demo-inside">Simular dentro do condomínio (demo)</option>
+            <option value="demo-outside">Simular fora do condomínio (demo)</option>
+            <option value="demo-inaccurate">Simular GPS impreciso (demo)</option>
+          </select>
+          <p class="field-help">
+            A checagem é local e demo. O GPS é conferido novamente em cada foto.
+          </p>
+          <button id="validate-location-button" class="button button-secondary" type="button">
+            Validar localização
+          </button>
+          <p id="location-result" class="location-result" role="status" aria-live="polite">
+            Confirme sua presença antes de iniciar uma captura.
+          </p>
+        </div>
+
+        <section id="capture-step" class="capture-step" aria-labelledby="capture-title" hidden>
+          <div>
+            <h2 id="capture-title">Captura de fotos</h2>
+            <p>Toque para abrir a câmera. A localização será conferida em cada foto; a câmera fecha ao sair do app.</p>
+          </div>
+          <button id="start-camera-button" class="button button-primary" type="button">
+            Iniciar captura
+          </button>
+
+          <div id="camera-panel" class="camera-panel" aria-label="Captura de fotos" hidden>
+            <video id="camera-video" autoplay playsinline muted aria-label="Pré-visualização da câmera"></video>
+            <div id="camera-message" class="camera-message" role="status">
+              A câmera está fechada.
+            </div>
+          </div>
+          <canvas id="capture-canvas" hidden></canvas>
+
+          <div id="capture-controls" class="capture-controls" hidden>
+            <button id="capture-button" class="button button-primary" type="button" disabled>
+              Tirar foto
+            </button>
+            <button id="stop-camera-button" class="button button-quiet" type="button">
+              Encerrar captura
+            </button>
+          </div>
+        </section>
       </section>
+
+      <section id="queue-section" class="queue-section" aria-labelledby="queue-title" hidden>
+        <div class="section-heading">
+          <h2 id="queue-title">Fotos do lote</h2>
+          <span id="queue-count" class="queue-count">0 fotos</span>
+        </div>
+        <div class="queue-actions">
+          <button id="send-button" class="button button-secondary" type="button" disabled>
+            Enviar (0)
+          </button>
+          <button id="clear-button" class="button button-quiet" type="button" disabled>
+            Limpar lote
+          </button>
+        </div>
+        <div id="photo-list" class="photo-list" aria-live="polite"></div>
+        <p id="empty-queue" class="empty-queue">As fotos capturadas aparecerão aqui.</p>
+      </section>
+
+      <button id="update-button" class="button button-update" type="button" hidden>
+          Atualizar aplicativo
+      </button>
 
       <p id="secure-context-warning" class="notice notice-warning" hidden>
         A câmera e o modo offline precisam de HTTPS. Em desenvolvimento, use localhost.
       </p>
       <p id="queue-warning" class="notice notice-warning" hidden></p>
-
-      <section class="queue-section" aria-labelledby="queue-title">
-        <div class="section-heading">
-          <h2 id="queue-title">Fotos do lote</h2>
-          <span id="queue-count" class="queue-count">0 fotos</span>
-        </div>
-        <div id="photo-list" class="photo-list" aria-live="polite"></div>
-        <p id="empty-queue" class="empty-queue">As fotos capturadas aparecerão aqui.</p>
-      </section>
 
       <p id="app-status" class="app-status" role="status" aria-live="polite">
         Iniciando ScanEntrega…

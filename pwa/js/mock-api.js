@@ -16,6 +16,17 @@ export async function mockUpload(formData) {
     sizeBytes: photo.size,
     batchId: formData.get("batchId"),
     capturedAt: formData.get("capturedAt"),
+    employeeId: formData.get("employeeId"),
+    employeeName: formData.get("employeeName"),
+    condominiumId: formData.get("condominiumId"),
+    condominiumName: formData.get("condominiumName"),
+    latitude: formData.get("latitude"),
+    longitude: formData.get("longitude"),
+    accuracyMeters: formData.get("accuracyMeters"),
+    distanceMeters: formData.get("distanceMeters"),
+    locationValidatedAt: formData.get("locationValidatedAt"),
+    locationSource: formData.get("locationSource"),
+    locationIsMock: formData.get("locationIsMock"),
     receivedAt: new Date().toISOString(),
   };
   console.info("[mock-api] foto recebida", metadata);

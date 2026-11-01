@@ -13,9 +13,13 @@ database.version(1).stores({
  * Persists an approved image unless the configured queue limit has been reached.
  * @param {Blob} blob
  * @param {string} batchId
+ * @param {Record<string, unknown>} captureMetadata
  * @returns {Promise<number>}
  */
-export async function adicionarFoto(blob, batchId) {
+export async function adicionarFoto(blob, batchId, captureMetadata) {
+  if (!captureMetadata || typeof captureMetadata !== "object") {
+    throw new TypeError("Os dados de funcionário e localização são obrigatórios.");
+  }
   return database.transaction("rw", database.fotos, async () => {
     const count = await database.fotos.count();
     if (count >= MAX_QUEUE_SIZE) {
@@ -25,6 +29,7 @@ export async function adicionarFoto(blob, batchId) {
       blob,
       timestamp: Date.now(),
       batchId,
+      captureMetadata,
       status: "pendente",
       tentativas: 0,
       nextAttemptAt: 0,

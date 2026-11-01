@@ -1,4 +1,4 @@
-const CACHE_NAME = "scanentrega-v2";
+const CACHE_NAME = "scanentrega-v5";
 const APP_SHELL = [
   "./index.html",
   "./offline.html",
@@ -12,6 +12,7 @@ const APP_SHELL = [
   "./js/sync.js",
   "./js/mock-api.js",
   "./js/ui.js",
+  "./js/mock-workflow.js",
   "./vendor/dexie.min.js",
   "./icons/icon-192.png",
   "./icons/icon-512.png",

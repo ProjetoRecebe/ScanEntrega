@@ -71,10 +71,117 @@ button:focus-visible {
   color: var(--danger);
 }
 
+.demo-banner {
+  margin: 0;
+  padding: 10px 12px;
+  border: 1px solid #fedf89;
+  border-radius: 10px;
+  background: #fffaeb;
+  color: #93370d;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.workflow-card {
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--surface);
+}
+
+.workflow-card h2,
+.capture-step h2 {
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.workflow-card > p,
+.capture-step p {
+  margin: 8px 0 0;
+  color: var(--muted);
+}
+
+.workflow-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-stack {
+  display: grid;
+  gap: 8px;
+}
+
+.form-stack label {
+  margin-top: 4px;
+  color: #344054;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.form-stack input,
+.form-stack select {
+  width: 100%;
+  min-height: 46px;
+  padding: 9px 11px;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  background: #fff;
+  color: #172033;
+  font: inherit;
+}
+
+.form-stack input:focus-visible,
+.form-stack select:focus-visible {
+  outline: 3px solid #84adff;
+  outline-offset: 2px;
+}
+
+.demo-hint,
+.field-help {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.location-result {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 9px;
+  background: #f2f4f7;
+  color: #344054;
+  font-size: 0.9rem;
+}
+
+.location-result.is-approved {
+  background: #e8f7ed;
+  color: #067647;
+}
+
+.location-result.is-rejected {
+  background: #fff1f0;
+  color: var(--danger);
+}
+
+.capture-step {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+
+.capture-controls,
+.queue-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
 .camera-panel {
   position: relative;
-  min-height: 35vh;
-  flex: 1 1 38vh;
+  height: min(48vh, 480px);
+  min-height: 260px;
   overflow: hidden;
   border-radius: 18px;
   background: #111827;
@@ -99,12 +206,6 @@ button:focus-visible {
   text-align: center;
 }
 
-.controls {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-}
-
 .button {
   min-height: 48px;
   padding: 10px 14px;
@@ -120,7 +221,6 @@ button:focus-visible {
 }
 
 .button-primary {
-  grid-column: 1 / -1;
   min-height: 58px;
   background: var(--blue);
   color: #fff;
@@ -143,13 +243,16 @@ button:focus-visible {
 }
 
 .button-update {
-  grid-column: 1 / -1;
   background: #ecfdf3;
   color: #067647;
 }
 
 .queue-section {
   min-width: 0;
+}
+
+.queue-actions .button {
+  width: 100%;
 }
 
 .section-heading h2 {
@@ -280,19 +383,4 @@ button:focus-visible {
     padding-top: 20px;
   }
 
-  .camera-panel {
-    flex-basis: 48vh;
-  }
-
-  .controls {
-    grid-template-columns: 1.2fr 1fr 1fr;
-  }
-
-  .button-primary {
-    grid-column: auto;
-  }
-
-  .button-update {
-    grid-column: 1 / -1;
-  }
 }

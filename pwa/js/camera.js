@@ -27,6 +27,7 @@ export class CameraController {
   #video;
   #canvas;
   #stream = null;
+  #startRequestId = 0;
   #capturing = false;
   #onMessage;
 
@@ -43,23 +44,23 @@ export class CameraController {
   }
 
   #handleVisibility = () => {
-    if (document.hidden) {
-      this.#onMessage("Câmera pausada enquanto o aplicativo está em segundo plano.");
+    if (document.hidden && this.#stream) {
       this.stop();
-    } else {
-      void this.start();
+      this.#onMessage("Câmera encerrada ao sair do app. Toque em Iniciar captura para reabrir.");
     }
   };
 
   async start() {
-    if (this.#stream || document.hidden) return;
+    if (this.#stream) return true;
+    if (document.hidden) return false;
     if (!navigator.mediaDevices?.getUserMedia) {
       this.#onMessage("A câmera requer HTTPS ou um navegador compatível.");
-      return;
+      return false;
     }
 
+    const requestId = ++this.#startRequestId;
     try {
-      this.#stream = await navigator.mediaDevices.getUserMedia({
+      const stream = await navigator.mediaDevices.getUserMedia({
         video: {
           facingMode: { ideal: "environment" },
           width: { ideal: 1920 },
@@ -67,20 +68,43 @@ export class CameraController {
         },
         audio: false,
       });
-      if (document.hidden) {
-        this.stop();
-        return;
+      if (requestId !== this.#startRequestId || document.hidden) {
+        stream.getTracks().forEach((track) => track.stop());
+        if (requestId === this.#startRequestId) {
+          this.#onMessage("Câmera encerrada ao sair do app. Toque em Iniciar captura para reabrir.");
+        }
+        return false;
       }
-      this.#video.srcObject = this.#stream;
+      this.#stream = stream;
+      this.#video.srcObject = stream;
       await this.#video.play();
+      if (
+        requestId !== this.#startRequestId
+        || document.hidden
+        || this.#stream !== stream
+        || !stream.getTracks().some((track) => track.readyState === "live")
+      ) {
+        stream.getTracks().forEach((track) => track.stop());
+        if (this.#stream === stream) this.#stream = null;
+        if (this.#video.srcObject === stream) this.#video.srcObject = null;
+        if (requestId === this.#startRequestId) {
+          this.#onMessage("Câmera encerrada ao sair do app. Toque em Iniciar captura para reabrir.");
+        }
+        return false;
+      }
       this.#onMessage("Câmera pronta.");
+      return true;
     } catch (error) {
-      this.stop();
-      this.#onMessage(cameraErrorMessage(error));
+      if (requestId === this.#startRequestId) {
+        this.stop();
+        this.#onMessage(cameraErrorMessage(error));
+      }
+      return false;
     }
   }
 
   stop() {
+    this.#startRequestId += 1;
     this.#stream?.getTracks().forEach((track) => track.stop());
     this.#stream = null;
     this.#video.srcObject = null;
